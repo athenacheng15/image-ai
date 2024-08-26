@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { fabric } from "fabric";
 
+import { Footer } from "@/features/editor/components/footer";
 import { Navbar } from "@/features/editor/components/navbar";
 import { Sidebar } from "@/features/editor/components/sidebar";
 import { Toolbar } from "@/features/editor/components/toolbar";
@@ -32,9 +33,13 @@ export const Editor = () => {
 				<Sidebar />
 				<main className="flex-1 bg-muted overflow-auto relative flex flex-col">
 					<Toolbar />
-					<div className="flex-1 h-full bg-muted" ref={containerRef}>
+					<div
+						className="flex-1 h-[cacl(100%-124px)] bg-muted"
+						ref={containerRef}
+					>
 						<canvas ref={canvasRef} />
 					</div>
+					<Footer />
 				</main>
 			</div>
 		</div>
