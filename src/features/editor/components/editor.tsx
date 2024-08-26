@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { fabric } from "fabric";
 
 import { Footer } from "@/features/editor/components/footer";
@@ -8,8 +8,28 @@ import { Navbar } from "@/features/editor/components/navbar";
 import { Sidebar } from "@/features/editor/components/sidebar";
 import { Toolbar } from "@/features/editor/components/toolbar";
 import { useEditor } from "@/features/editor/hooks/use-editor";
+import { ActiveTool } from "../type";
 
 export const Editor = () => {
+	const [activeTool, setActiveTool] = useState<ActiveTool>("select");
+
+	const onChangeActiveTool = useCallback(
+		(tool: ActiveTool) => {
+			if (tool === activeTool) {
+				// prevent double click
+				return setActiveTool("select");
+			}
+			if (tool === "draw") {
+				//
+			}
+			if (activeTool === "draw") {
+				//
+			}
+			setActiveTool(tool);
+		},
+		[activeTool]
+	);
+
 	const { init } = useEditor();
 
 	const canvasRef = useRef(null);
@@ -25,15 +45,18 @@ export const Editor = () => {
 			initialCanvas: canvas,
 			initialContainer: containerRef.current!,
 		});
-        return () => {
-					canvas.dispose();
-				};
+		return () => {
+			canvas.dispose();
+		};
 	}, [init]);
 	return (
 		<div className="h-full flex flex-col">
-			<Navbar />
+			<Navbar activeTool={activeTool} onChangeActiveTool={onChangeActiveTool} />
 			<div className="absolute h-[calc(100%-68px)] w-full top-[68px] flex">
-				<Sidebar />
+				<Sidebar
+					activeTool={activeTool}
+					onChangeActiveTool={onChangeActiveTool}
+				/>
 				<main className="flex-1 bg-muted overflow-auto relative flex flex-col">
 					<Toolbar />
 					<div
