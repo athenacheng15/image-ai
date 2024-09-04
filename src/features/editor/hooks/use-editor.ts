@@ -24,6 +24,7 @@ const buildEditor = ({
 	setFillColor,
 	setStrokeColor,
 	setStrokeWidth,
+	selectedObjs,
 }: BuildEditorProps): Editor => {
 	const getWorkspace = () => {
 		return canvas.getObjects().find((obj) => obj.name === "clip");
@@ -47,6 +48,7 @@ const buildEditor = ({
 		changeFillColor: (value: string) => {
 			setFillColor(value);
 			canvas.getActiveObjects().forEach((obj) => obj.set({ fill: value }));
+			canvas.renderAll();
 		},
 		changeStrokeColor: (value: string) => {
 			setStrokeColor(value);
@@ -57,16 +59,21 @@ const buildEditor = ({
 				}
 				obj.set({ stroke: value });
 			});
+			canvas.renderAll();
 		},
 		changeStrokeWidth: (value: number) => {
 			setStrokeWidth(value);
 			canvas
 				.getActiveObjects()
 				.forEach((obj) => obj.set({ strokeWidth: value }));
+			canvas.renderAll();
 		},
 		addCircle: () => {
 			const object = new fabric.Circle({
 				...CIRCLE_OPTIONS,
+				fill: fillColor,
+				stroke: strokeColor,
+				strokeWidth,
 			});
 			addToCanvas(object);
 		},
@@ -75,18 +82,27 @@ const buildEditor = ({
 				...RECTANGLE_OPTIONS,
 				rx: 50,
 				ry: 50,
+				fill: fillColor,
+				stroke: strokeColor,
+				strokeWidth,
 			});
 			addToCanvas(object);
 		},
 		addRectangle: () => {
 			const object = new fabric.Rect({
 				...RECTANGLE_OPTIONS,
+				fill: fillColor,
+				stroke: strokeColor,
+				strokeWidth,
 			});
 			addToCanvas(object);
 		},
 		addTriangle: () => {
 			const object = new fabric.Triangle({
 				...TRIANGLE_OPTIONS,
+				fill: fillColor,
+				stroke: strokeColor,
+				strokeWidth,
 			});
 			addToCanvas(object);
 		},
@@ -99,7 +115,12 @@ const buildEditor = ({
 					{ x: WIDTH, y: 0 },
 					{ x: WIDTH / 2, y: HEIGHT },
 				],
-				{ ...TRIANGLE_OPTIONS }
+				{
+					...TRIANGLE_OPTIONS,
+					fill: fillColor,
+					stroke: strokeColor,
+					strokeWidth,
+				}
 			);
 
 			addToCanvas(object);
@@ -114,14 +135,21 @@ const buildEditor = ({
 					{ x: WIDTH / 2, y: HEIGHT },
 					{ x: 0, y: HEIGHT / 2 },
 				],
-				{ ...DAIMOND_OPTIONS }
+				{
+					...DAIMOND_OPTIONS,
+					fill: fillColor,
+					stroke: strokeColor,
+					strokeWidth,
+				}
 			);
 
 			addToCanvas(object);
 		},
+		canvas,
 		fillColor,
 		strokeColor,
 		strokeWidth,
+		selectedObjs,
 	};
 };
 
@@ -148,10 +176,11 @@ export const useEditor = () => {
 				setFillColor,
 				setStrokeColor,
 				setStrokeWidth,
+				selectedObjs,
 			});
 		}
 		return undefined;
-	}, [canvas, fillColor, strokeColor, strokeWidth]);
+	}, [canvas, fillColor, strokeColor, strokeWidth, selectedObjs]);
 
 	const init = useCallback(
 		({
