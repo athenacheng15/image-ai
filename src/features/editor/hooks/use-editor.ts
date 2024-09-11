@@ -8,6 +8,7 @@ import {
 	CIRCLE_OPTIONS,
 	DAIMOND_OPTIONS,
 	Editor,
+	EditorHookProps,
 	FILL_COLOR,
 	RECTANGLE_OPTIONS,
 	STROKE_COLOR,
@@ -162,7 +163,7 @@ const buildEditor = ({
 	};
 };
 
-export const useEditor = () => {
+export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
 	const [canvas, setCanvas] = useState<fabric.Canvas | null>(null);
 	const [container, setContainer] = useState<HTMLDivElement | null>(null);
 	const [selectedObjs, setSelectedObjs] = useState<fabric.Object[]>([]);
@@ -173,7 +174,7 @@ export const useEditor = () => {
 
 	useAutoResize({ canvas, container });
 
-	useCanvasEvents({ canvas, setSelectedObjs });
+	useCanvasEvents({ canvas, setSelectedObjs, clearSelectionCallback });
 
 	const editor = useMemo(() => {
 		if (canvas) {

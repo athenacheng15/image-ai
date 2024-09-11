@@ -10,7 +10,7 @@ import { ShapeSidebar } from "@/features/editor/components/shape-sidebar";
 import { FillColorSidebar } from "@/features/editor/components/fill-color-sidebar";
 import { Toolbar } from "@/features/editor/components/toolbar";
 import { useEditor } from "@/features/editor/hooks/use-editor";
-import { ActiveTool } from "../type";
+import { ActiveTool, selectionDepedentTools } from "../type";
 
 export const Editor = () => {
 	const [activeTool, setActiveTool] = useState<ActiveTool>("select");
@@ -32,7 +32,15 @@ export const Editor = () => {
 		[activeTool]
 	);
 
-	const { init, editor } = useEditor();
+	const onClearSelection = useCallback(() => {
+		if (selectionDepedentTools.includes(activeTool)) {
+			setActiveTool("select");
+		}
+	}, [activeTool]);
+
+	const { init, editor } = useEditor({
+		clearSelectionCallback: onClearSelection,
+	});
 
 	const canvasRef = useRef(null);
 	const containerRef = useRef<HTMLDivElement>(null);
