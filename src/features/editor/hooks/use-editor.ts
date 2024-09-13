@@ -49,6 +49,21 @@ const buildEditor = ({
 		canvas.setActiveObject(object);
 	};
 	return {
+		getActiveOpacity: () => {
+			const selectedObj = selectedObjs[0];
+			if (!selectedObj) {
+				return 1;
+			}
+			const value = selectedObj.get("opacity") || 1;
+
+			return value;
+		},
+		changeOpacity: (value: number) => {
+			canvas.getActiveObjects().forEach((obj) => {
+				obj.set({ opacity: value });
+			});
+			canvas.renderAll();
+		},
 		bringForward: () => {
 			canvas.getActiveObjects().forEach((obj) => {
 				canvas.bringForward(obj);
