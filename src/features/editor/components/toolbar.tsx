@@ -4,7 +4,7 @@ import type { ActiveTool, Editor } from "../type";
 
 import { BsBorderWidth } from "react-icons/bs";
 import { RxTransparencyGrid } from "react-icons/rx";
-import { ArrowDown, ArrowUp } from "lucide-react";
+import { ArrowDown, ArrowUp, ChevronDown } from "lucide-react";
 
 import { Hint } from "@/components/hint";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,7 @@ export const Toolbar = ({
 }: ToolbarProps) => {
 	const fillColor = editor?.getActiveFillColor();
 	const strokeColor = editor?.getActiveStrokeColor();
+	const fontFamily = editor?.getActiveFontFamily();
 
 	const selectedObjectType = editor?.selectedObjs[0]?.type;
 	const isText = isTextType(selectedObjectType);
@@ -52,7 +53,7 @@ export const Toolbar = ({
 					</Button>
 				</Hint>
 			</div>
-			{isText && (
+			{!isText && (
 				<div className="flex items-center justify-center h-full">
 					<Hint label="Stroke Color" side="bottom" sideOffset={3}>
 						<Button
@@ -71,7 +72,7 @@ export const Toolbar = ({
 					</Hint>
 				</div>
 			)}
-			{isText && (
+			{!isText && (
 				<div className="flex items-center justify-center h-full">
 					<Hint label="Stroke width" side="bottom" sideOffset={3}>
 						<Button
@@ -85,6 +86,25 @@ export const Toolbar = ({
 					</Hint>
 				</div>
 			)}
+			{isText && (
+				<div className="flex items-center justify-center h-full">
+					<Hint label="Font" side="bottom" sideOffset={5}>
+						<Button
+							className={cn(
+								"w-auto px-2 text-sm",
+								activeTool === "font" && "bg-gray-100"
+							)}
+							onClick={() => onChangeActiveTool("font")}
+							size="icon"
+							variant="ghost"
+						>
+							<div className="max-w-[100px] truncate">{fontFamily}</div>
+							<ChevronDown className="size-4 ml-2 shrink-0" />
+						</Button>
+					</Hint>
+				</div>
+			)}
+
 			<div className="flex items-center justify-center h-full">
 				<Hint label="Bring forward" side="bottom" sideOffset={3}>
 					<Button

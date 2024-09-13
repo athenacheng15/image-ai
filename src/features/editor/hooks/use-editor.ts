@@ -10,6 +10,7 @@ import {
 	Editor,
 	EditorHookProps,
 	FILL_COLOR,
+	FONT_FAMILY,
 	RECTANGLE_OPTIONS,
 	STROKE_COLOR,
 	STROKE_DASH_ARRAY,
@@ -21,10 +22,12 @@ import { isTextType } from "@/features/editor/utils";
 
 const buildEditor = ({
 	canvas,
+	fontFamily,
 	fillColor,
 	strokeColor,
 	strokeWidth,
 	strokeDashArray,
+	setFontFamily,
 	setFillColor,
 	setStrokeColor,
 	setStrokeWidth,
@@ -88,6 +91,17 @@ const buildEditor = ({
 			canvas.renderAll();
 			const workspace = getWorkspace();
 			workspace?.sendToBack();
+		},
+		changeFontFamily: (value: string) => {
+			setFontFamily(value);
+			canvas.getActiveObjects().forEach((obj) => {
+				if (isTextType(obj.type)) {
+					// @ts-ignore
+					// Faulty TS library, fontFamily exisits.
+					obj.set({ fontFamily: value });
+				}
+			});
+			canvas.renderAll();
 		},
 		changeFillColor: (value: string) => {
 			setFillColor(value);
@@ -203,6 +217,16 @@ const buildEditor = ({
 			addToCanvas(object);
 		},
 		canvas,
+		getActiveFontFamily: () => {
+			const selectedObj = selectedObjs[0];
+			if (!selectedObj) {
+				return fontFamily;
+			}
+			// @ts-ignore
+			// Faulty TS library, fontFamily exisits.
+			const value = selectedObj.get("fontFamily") || fontFamily;
+			return value;
+		},
 		getActiveFillColor: () => {
 			const selectedObj = selectedObjs[0];
 			if (!selectedObj) {
@@ -249,6 +273,7 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
 	const [container, setContainer] = useState<HTMLDivElement | null>(null);
 	const [selectedObjs, setSelectedObjs] = useState<fabric.Object[]>([]);
 
+	const [fontFamily, setFontFamily] = useState(FONT_FAMILY);
 	const [fillColor, setFillColor] = useState(FILL_COLOR);
 	const [strokeColor, setStrokeColor] = useState(STROKE_COLOR);
 	const [strokeWidth, setStrokeWidth] = useState(STROKE_WIDTH);
@@ -263,10 +288,12 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
 		if (canvas) {
 			return buildEditor({
 				canvas,
+				fontFamily,
 				fillColor,
 				strokeColor,
 				strokeWidth,
 				strokeDashArray,
+				setFontFamily,
 				setFillColor,
 				setStrokeColor,
 				setStrokeWidth,
@@ -277,6 +304,7 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
 		return undefined;
 	}, [
 		canvas,
+		fontFamily,
 		fillColor,
 		strokeColor,
 		strokeWidth,
