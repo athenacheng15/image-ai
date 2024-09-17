@@ -11,6 +11,7 @@ import {
 	EditorHookProps,
 	FILL_COLOR,
 	FONT_FAMILY,
+	FONT_SIZE,
 	FONT_WEIGHT,
 	RECTANGLE_OPTIONS,
 	STROKE_COLOR,
@@ -118,6 +119,16 @@ const buildEditor = ({
 					// @ts-ignore
 					// Faulty TS library, textAlign exisits.
 					obj.set({ textAlign: value });
+				}
+			});
+			canvas.renderAll();
+		},
+		changeFontSize: (value: number) => {
+			canvas.getActiveObjects().forEach((obj) => {
+				if (isTextType(obj.type)) {
+					// @ts-ignore
+					// Faulty TS library, fontSize exisits.
+					obj.set({ fontSize: value });
 				}
 			});
 			canvas.renderAll();
@@ -317,6 +328,16 @@ const buildEditor = ({
 			// @ts-ignore
 			// Faulty TS library, textAlign exisits.
 			const value = selectedObj.get("textAlign") || TextAlignEnum.Left;
+			return value;
+		},
+		getActiveFontSize: () => {
+			const selectedObj = selectedObjs[0];
+			if (!selectedObj) {
+				return FONT_SIZE;
+			}
+			// @ts-ignore
+			// Faulty TS library, fontSize exisits.
+			const value = selectedObj.get("fontSize") || FONT_SIZE;
 			return value;
 		},
 		getActiveFontStyle: () => {
