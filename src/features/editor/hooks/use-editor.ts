@@ -18,6 +18,7 @@ import {
 	STROKE_WIDTH,
 	TEXT_OPTIONS,
 	TRIANGLE_OPTIONS,
+	TextAlignEnum,
 } from "@/features/editor/type";
 import { isTextType } from "@/features/editor/utils";
 
@@ -107,6 +108,16 @@ const buildEditor = ({
 					// @ts-ignore
 					// Faulty TS library, underline exisits.
 					obj.set({ underline: value });
+				}
+			});
+			canvas.renderAll();
+		},
+		changeTextAlign: (value: string) => {
+			canvas.getActiveObjects().forEach((obj) => {
+				if (isTextType(obj.type)) {
+					// @ts-ignore
+					// Faulty TS library, textAlign exisits.
+					obj.set({ textAlign: value });
 				}
 			});
 			canvas.renderAll();
@@ -296,6 +307,16 @@ const buildEditor = ({
 			// @ts-ignore
 			// Faulty TS library, underline exisits.
 			const value = selectedObj.get("underline") || false;
+			return value;
+		},
+		getActiveTextAlign: () => {
+			const selectedObj = selectedObjs[0];
+			if (!selectedObj) {
+				return TextAlignEnum.Left;
+			}
+			// @ts-ignore
+			// Faulty TS library, textAlign exisits.
+			const value = selectedObj.get("textAlign") || TextAlignEnum.Left;
 			return value;
 		},
 		getActiveFontStyle: () => {

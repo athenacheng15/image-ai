@@ -134,6 +134,12 @@ export const TEXT_OPTIONS = {
 	fontFamily: FONT_FAMILY,
 };
 
+export enum TextAlignEnum {
+	Left = "left",
+	Right = "right",
+	Center = "center",
+}
+
 export type BuildEditorProps = {
 	canvas: fabric.Canvas;
 	fontFamily: string;
@@ -163,6 +169,7 @@ export interface Editor {
 	changeFontLinethrough: (value: boolean) => void;
 	changeFontUnderline: (value: boolean) => void;
 	changeFontStyle: (value: string) => void;
+	changeTextAlign: (value: string) => void;
 	changeFillColor: (value: string) => void;
 	changeStrokeColor: (value: string) => void;
 	changeStrokeWidth: (value: number) => void;
@@ -179,6 +186,7 @@ export interface Editor {
 	getActiveFontUnderline: () => boolean;
 	getActiveFontLinethrough: () => boolean;
 	getActiveFontStyle: () => string;
+	getActiveTextAlign: () => string;
 	getActiveFillColor: () => string;
 	getActiveStrokeColor: () => string;
 	getActiveStrokeWidth: () => number;
