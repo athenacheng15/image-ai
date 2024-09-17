@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { isTextType } from "../utils";
 import { FaBold } from "react-icons/fa6";
 import { useState } from "react";
+import { FaItalic, FaStrikethrough, FaUnderline } from "react-icons/fa";
 
 interface ToolbarProps {
 	editor: Editor | undefined;
@@ -28,23 +29,55 @@ export const Toolbar = ({
 	const initialStrokeColor = editor?.getActiveStrokeColor();
 	const initialFontFamily = editor?.getActiveFontFamily();
 	const initialFontWeight = editor?.getActiveFontWeight() || FONT_WEIGHT;
+	const initialFontStyle = editor?.getActiveFontStyle();
+	const initialFontLinethrough = editor?.getActiveFontLinethrough();
+	const initialFontUnderline = editor?.getActiveFontUnderline();
 
 	const [properties, setPropertirs] = useState({
 		fillColor: initialFillColor,
 		strokeColor: initialStrokeColor,
 		fontFamily: initialFontFamily,
 		fontWeight: initialFontWeight,
+		fontStyle: initialFontStyle,
+		fontLinethrough: initialFontLinethrough,
+		fontUnderline: initialFontUnderline,
 	});
 
+	const selectedObject = editor?.selectedObjs[0];
 	const selectedObjectType = editor?.selectedObjs[0]?.type;
 	const isText = isTextType(selectedObjectType);
+
 	const toggleBold = () => {
-		const selectedObject = editor?.selectedObjs[0];
 		if (!selectedObject) return;
 
 		const newValue = properties.fontWeight > 500 ? 500 : 700;
 		editor?.changeFontWeight(newValue);
 		setPropertirs((current) => ({ ...current, fontWeight: newValue }));
+	};
+
+	const toggleItalic = () => {
+		if (!selectedObject) return;
+
+		const isItalic = properties.fontStyle === "italic";
+		const newValue = isItalic ? "normal" : "italic";
+		editor?.changeFontStyle(newValue);
+		setPropertirs((current) => ({ ...current, fontStyle: newValue }));
+	};
+
+	const toggleLinethrough = () => {
+		if (!selectedObject) return;
+
+		const newValue = !properties.fontLinethrough;
+		editor?.changeFontLinethrough(newValue);
+		setPropertirs((current) => ({ ...current, fontLinethrough: newValue }));
+	};
+
+	const toggleUnderline = () => {
+		if (!selectedObject) return;
+
+		const newValue = !properties.fontUnderline;
+		editor?.changeFontUnderline(newValue);
+		setPropertirs((current) => ({ ...current, fontUnderline: newValue }));
 	};
 
 	if (editor?.selectedObjs.length === 0) {
@@ -128,12 +161,54 @@ export const Toolbar = ({
 				<div className="flex items-center justify-center h-full">
 					<Hint label="Bold" side="bottom" sideOffset={3}>
 						<Button
-							onClick={() => toggleBold()}
+							onClick={toggleBold}
 							size="icon"
 							variant="ghost"
 							className={cn(properties.fontWeight > 500 && "bg-gray-100")}
 						>
 							<FaBold className="size-4" />
+						</Button>
+					</Hint>
+				</div>
+			)}
+			{isText && (
+				<div className="flex items-center justify-center h-full">
+					<Hint label="Italic" side="bottom" sideOffset={3}>
+						<Button
+							onClick={toggleItalic}
+							size="icon"
+							variant="ghost"
+							className={cn(properties.fontStyle === "italic" && "bg-gray-100")}
+						>
+							<FaItalic className="size-4" />
+						</Button>
+					</Hint>
+				</div>
+			)}
+			{isText && (
+				<div className="flex items-center justify-center h-full">
+					<Hint label="Underline" side="bottom" sideOffset={3}>
+						<Button
+							onClick={toggleUnderline}
+							size="icon"
+							variant="ghost"
+							className={cn(properties.fontUnderline && "bg-gray-100")}
+						>
+							<FaUnderline className="size-4" />
+						</Button>
+					</Hint>
+				</div>
+			)}
+			{isText && (
+				<div className="flex items-center justify-center h-full">
+					<Hint label="Strike" side="bottom" sideOffset={3}>
+						<Button
+							onClick={toggleLinethrough}
+							size="icon"
+							variant="ghost"
+							className={cn(properties.fontLinethrough && "bg-gray-100")}
+						>
+							<FaStrikethrough className="size-4" />
 						</Button>
 					</Hint>
 				</div>

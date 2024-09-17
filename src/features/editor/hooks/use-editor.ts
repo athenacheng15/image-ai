@@ -81,6 +81,36 @@ const buildEditor = ({
 			});
 			canvas.renderAll();
 		},
+		changeFontStyle: (value: string) => {
+			canvas.getActiveObjects().forEach((obj) => {
+				if (isTextType(obj.type)) {
+					// @ts-ignore
+					// Faulty TS library, fontStyle exisits.
+					obj.set({ fontStyle: value });
+				}
+			});
+			canvas.renderAll();
+		},
+		changeFontLinethrough: (value: boolean) => {
+			canvas.getActiveObjects().forEach((obj) => {
+				if (isTextType(obj.type)) {
+					// @ts-ignore
+					// Faulty TS library, linethrough exisits.
+					obj.set({ linethrough: value });
+				}
+			});
+			canvas.renderAll();
+		},
+		changeFontUnderline: (value: boolean) => {
+			canvas.getActiveObjects().forEach((obj) => {
+				if (isTextType(obj.type)) {
+					// @ts-ignore
+					// Faulty TS library, underline exisits.
+					obj.set({ underline: value });
+				}
+			});
+			canvas.renderAll();
+		},
 		changeOpacity: (value: number) => {
 			canvas.getActiveObjects().forEach((obj) => {
 				obj.set({ opacity: value });
@@ -246,6 +276,36 @@ const buildEditor = ({
 			// @ts-ignore
 			// Faulty TS library, fontWeight exisits.
 			const value = selectedObj.get("fontWeight") || FONT_WEIGHT;
+			return value;
+		},
+		getActiveFontLinethrough: () => {
+			const selectedObj = selectedObjs[0];
+			if (!selectedObj) {
+				return false;
+			}
+			// @ts-ignore
+			// Faulty TS library, linethrough exisits.
+			const value = selectedObj.get("linethrough") || false;
+			return value;
+		},
+		getActiveFontUnderline: () => {
+			const selectedObj = selectedObjs[0];
+			if (!selectedObj) {
+				return false;
+			}
+			// @ts-ignore
+			// Faulty TS library, underline exisits.
+			const value = selectedObj.get("underline") || false;
+			return value;
+		},
+		getActiveFontStyle: () => {
+			const selectedObj = selectedObjs[0];
+			if (!selectedObj) {
+				return "normal";
+			}
+			// @ts-ignore
+			// Faulty TS library, fontStyleexisits.
+			const value = selectedObj.get("fontStyle") || "normal";
 			return value;
 		},
 		getActiveFillColor: () => {

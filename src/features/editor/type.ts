@@ -160,6 +160,9 @@ export interface Editor {
 	sendBackwards: () => void;
 	changeFontFamily: (value: string) => void;
 	changeFontWeight: (value: number) => void;
+	changeFontLinethrough: (value: boolean) => void;
+	changeFontUnderline: (value: boolean) => void;
+	changeFontStyle: (value: string) => void;
 	changeFillColor: (value: string) => void;
 	changeStrokeColor: (value: string) => void;
 	changeStrokeWidth: (value: number) => void;
@@ -173,6 +176,9 @@ export interface Editor {
 	canvas: fabric.Canvas;
 	getActiveFontFamily: () => string;
 	getActiveFontWeight: () => number;
+	getActiveFontUnderline: () => boolean;
+	getActiveFontLinethrough: () => boolean;
+	getActiveFontStyle: () => string;
 	getActiveFillColor: () => string;
 	getActiveStrokeColor: () => string;
 	getActiveStrokeWidth: () => number;
