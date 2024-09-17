@@ -78,6 +78,7 @@ export const STROKE_WIDTH = 2;
 export const STROKE_DASH_ARRAY = [];
 export const FONT_FAMILY = "Arial";
 export const FONT_SIZE = 32;
+export const FONT_WEIGHT = 400;
 
 export const CIRCLE_OPTIONS = {
 	radius: 225,
@@ -133,6 +134,12 @@ export const TEXT_OPTIONS = {
 	fontFamily: FONT_FAMILY,
 };
 
+export enum TextAlignEnum {
+	Left = "left",
+	Right = "right",
+	Center = "center",
+}
+
 export type BuildEditorProps = {
 	canvas: fabric.Canvas;
 	fontFamily: string;
@@ -158,6 +165,11 @@ export interface Editor {
 	bringForward: () => void;
 	sendBackwards: () => void;
 	changeFontFamily: (value: string) => void;
+	changeFontWeight: (value: number) => void;
+	changeFontLinethrough: (value: boolean) => void;
+	changeFontUnderline: (value: boolean) => void;
+	changeFontStyle: (value: string) => void;
+	changeTextAlign: (value: string) => void;
 	changeFillColor: (value: string) => void;
 	changeStrokeColor: (value: string) => void;
 	changeStrokeWidth: (value: number) => void;
@@ -170,6 +182,11 @@ export interface Editor {
 	addDiamond: () => void;
 	canvas: fabric.Canvas;
 	getActiveFontFamily: () => string;
+	getActiveFontWeight: () => number;
+	getActiveFontUnderline: () => boolean;
+	getActiveFontLinethrough: () => boolean;
+	getActiveFontStyle: () => string;
+	getActiveTextAlign: () => string;
 	getActiveFillColor: () => string;
 	getActiveStrokeColor: () => string;
 	getActiveStrokeWidth: () => number;

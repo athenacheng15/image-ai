@@ -11,12 +11,14 @@ import {
 	EditorHookProps,
 	FILL_COLOR,
 	FONT_FAMILY,
+	FONT_WEIGHT,
 	RECTANGLE_OPTIONS,
 	STROKE_COLOR,
 	STROKE_DASH_ARRAY,
 	STROKE_WIDTH,
 	TEXT_OPTIONS,
 	TRIANGLE_OPTIONS,
+	TextAlignEnum,
 } from "@/features/editor/type";
 import { isTextType } from "@/features/editor/utils";
 
@@ -69,6 +71,56 @@ const buildEditor = ({
 			const value = selectedObj.get("opacity") || 1;
 
 			return value;
+		},
+		changeFontWeight: (value: number) => {
+			canvas.getActiveObjects().forEach((obj) => {
+				if (isTextType(obj.type)) {
+					// @ts-ignore
+					// Faulty TS library, fontWeight exisits.
+					obj.set({ fontWeight: value });
+				}
+			});
+			canvas.renderAll();
+		},
+		changeFontStyle: (value: string) => {
+			canvas.getActiveObjects().forEach((obj) => {
+				if (isTextType(obj.type)) {
+					// @ts-ignore
+					// Faulty TS library, fontStyle exisits.
+					obj.set({ fontStyle: value });
+				}
+			});
+			canvas.renderAll();
+		},
+		changeFontLinethrough: (value: boolean) => {
+			canvas.getActiveObjects().forEach((obj) => {
+				if (isTextType(obj.type)) {
+					// @ts-ignore
+					// Faulty TS library, linethrough exisits.
+					obj.set({ linethrough: value });
+				}
+			});
+			canvas.renderAll();
+		},
+		changeFontUnderline: (value: boolean) => {
+			canvas.getActiveObjects().forEach((obj) => {
+				if (isTextType(obj.type)) {
+					// @ts-ignore
+					// Faulty TS library, underline exisits.
+					obj.set({ underline: value });
+				}
+			});
+			canvas.renderAll();
+		},
+		changeTextAlign: (value: string) => {
+			canvas.getActiveObjects().forEach((obj) => {
+				if (isTextType(obj.type)) {
+					// @ts-ignore
+					// Faulty TS library, textAlign exisits.
+					obj.set({ textAlign: value });
+				}
+			});
+			canvas.renderAll();
 		},
 		changeOpacity: (value: number) => {
 			canvas.getActiveObjects().forEach((obj) => {
@@ -225,6 +277,56 @@ const buildEditor = ({
 			// @ts-ignore
 			// Faulty TS library, fontFamily exisits.
 			const value = selectedObj.get("fontFamily") || fontFamily;
+			return value;
+		},
+		getActiveFontWeight: () => {
+			const selectedObj = selectedObjs[0];
+			if (!selectedObj) {
+				return FONT_WEIGHT;
+			}
+			// @ts-ignore
+			// Faulty TS library, fontWeight exisits.
+			const value = selectedObj.get("fontWeight") || FONT_WEIGHT;
+			return value;
+		},
+		getActiveFontLinethrough: () => {
+			const selectedObj = selectedObjs[0];
+			if (!selectedObj) {
+				return false;
+			}
+			// @ts-ignore
+			// Faulty TS library, linethrough exisits.
+			const value = selectedObj.get("linethrough") || false;
+			return value;
+		},
+		getActiveFontUnderline: () => {
+			const selectedObj = selectedObjs[0];
+			if (!selectedObj) {
+				return false;
+			}
+			// @ts-ignore
+			// Faulty TS library, underline exisits.
+			const value = selectedObj.get("underline") || false;
+			return value;
+		},
+		getActiveTextAlign: () => {
+			const selectedObj = selectedObjs[0];
+			if (!selectedObj) {
+				return TextAlignEnum.Left;
+			}
+			// @ts-ignore
+			// Faulty TS library, textAlign exisits.
+			const value = selectedObj.get("textAlign") || TextAlignEnum.Left;
+			return value;
+		},
+		getActiveFontStyle: () => {
+			const selectedObj = selectedObjs[0];
+			if (!selectedObj) {
+				return "normal";
+			}
+			// @ts-ignore
+			// Faulty TS library, fontStyleexisits.
+			const value = selectedObj.get("fontStyle") || "normal";
 			return value;
 		},
 		getActiveFillColor: () => {

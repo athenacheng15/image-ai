@@ -1,15 +1,30 @@
 "use client";
 
-import type { ActiveTool, Editor } from "../type";
+import {
+	FONT_WEIGHT,
+	TextAlignEnum,
+	type ActiveTool,
+	type Editor,
+} from "../type";
 
 import { BsBorderWidth } from "react-icons/bs";
 import { RxTransparencyGrid } from "react-icons/rx";
-import { ArrowDown, ArrowUp, ChevronDown } from "lucide-react";
+import {
+	AlignCenter,
+	AlignLeft,
+	AlignRight,
+	ArrowDown,
+	ArrowUp,
+	ChevronDown,
+} from "lucide-react";
 
 import { Hint } from "@/components/hint";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { isTextType } from "../utils";
+import { FaBold } from "react-icons/fa6";
+import { useState } from "react";
+import { FaItalic, FaStrikethrough, FaUnderline } from "react-icons/fa";
 
 interface ToolbarProps {
 	editor: Editor | undefined;
@@ -22,12 +37,69 @@ export const Toolbar = ({
 	activeTool,
 	onChangeActiveTool,
 }: ToolbarProps) => {
-	const fillColor = editor?.getActiveFillColor();
-	const strokeColor = editor?.getActiveStrokeColor();
-	const fontFamily = editor?.getActiveFontFamily();
+	const initialFillColor = editor?.getActiveFillColor();
+	const initialStrokeColor = editor?.getActiveStrokeColor();
+	const initialFontFamily = editor?.getActiveFontFamily();
+	const initialFontWeight = editor?.getActiveFontWeight() || FONT_WEIGHT;
+	const initialFontStyle = editor?.getActiveFontStyle();
+	const initialFontLinethrough = editor?.getActiveFontLinethrough();
+	const initialFontUnderline = editor?.getActiveFontUnderline();
+	const initialTextAlign = editor?.getActiveTextAlign();
 
+	const [properties, setPropertirs] = useState({
+		fillColor: initialFillColor,
+		strokeColor: initialStrokeColor,
+		fontFamily: initialFontFamily,
+		fontWeight: initialFontWeight,
+		fontStyle: initialFontStyle,
+		fontLinethrough: initialFontLinethrough,
+		fontUnderline: initialFontUnderline,
+		textAlign: initialTextAlign,
+	});
+
+	const selectedObject = editor?.selectedObjs[0];
 	const selectedObjectType = editor?.selectedObjs[0]?.type;
 	const isText = isTextType(selectedObjectType);
+
+	const toggleBold = () => {
+		if (!selectedObject) return;
+
+		const newValue = properties.fontWeight > 500 ? 500 : 700;
+		editor?.changeFontWeight(newValue);
+		setPropertirs((current) => ({ ...current, fontWeight: newValue }));
+	};
+
+	const toggleItalic = () => {
+		if (!selectedObject) return;
+
+		const isItalic = properties.fontStyle === "italic";
+		const newValue = isItalic ? "normal" : "italic";
+		editor?.changeFontStyle(newValue);
+		setPropertirs((current) => ({ ...current, fontStyle: newValue }));
+	};
+
+	const toggleLinethrough = () => {
+		if (!selectedObject) return;
+
+		const newValue = !properties.fontLinethrough;
+		editor?.changeFontLinethrough(newValue);
+		setPropertirs((current) => ({ ...current, fontLinethrough: newValue }));
+	};
+
+	const toggleUnderline = () => {
+		if (!selectedObject) return;
+
+		const newValue = !properties.fontUnderline;
+		editor?.changeFontUnderline(newValue);
+		setPropertirs((current) => ({ ...current, fontUnderline: newValue }));
+	};
+
+	const onChangeTextAlign = (value: string) => {
+		if (!selectedObject) return;
+
+		editor?.changeTextAlign(value);
+		setPropertirs((current) => ({ ...current, textAlign: value }));
+	};
 
 	if (editor?.selectedObjs.length === 0) {
 		return (
@@ -47,7 +119,7 @@ export const Toolbar = ({
 						<div
 							className="rounded-sm size-4 border"
 							style={{
-								backgroundColor: fillColor,
+								backgroundColor: properties.fillColor,
 							}}
 						/>
 					</Button>
@@ -65,7 +137,7 @@ export const Toolbar = ({
 							<div
 								className="rounded-sm size-4 border bg-white"
 								style={{
-									borderColor: strokeColor,
+									borderColor: properties.strokeColor,
 								}}
 							/>
 						</Button>
@@ -98,8 +170,114 @@ export const Toolbar = ({
 							size="icon"
 							variant="ghost"
 						>
-							<div className="max-w-[100px] truncate">{fontFamily}</div>
+							<div className="max-w-[100px] truncate">
+								{properties.fontFamily}
+							</div>
 							<ChevronDown className="size-4 ml-2 shrink-0" />
+						</Button>
+					</Hint>
+				</div>
+			)}
+			{isText && (
+				<div className="flex items-center justify-center h-full">
+					<Hint label="Bold" side="bottom" sideOffset={3}>
+						<Button
+							onClick={toggleBold}
+							size="icon"
+							variant="ghost"
+							className={cn(properties.fontWeight > 500 && "bg-gray-100")}
+						>
+							<FaBold className="size-4" />
+						</Button>
+					</Hint>
+				</div>
+			)}
+			{isText && (
+				<div className="flex items-center justify-center h-full">
+					<Hint label="Italic" side="bottom" sideOffset={3}>
+						<Button
+							onClick={toggleItalic}
+							size="icon"
+							variant="ghost"
+							className={cn(properties.fontStyle === "italic" && "bg-gray-100")}
+						>
+							<FaItalic className="size-4" />
+						</Button>
+					</Hint>
+				</div>
+			)}
+			{isText && (
+				<div className="flex items-center justify-center h-full">
+					<Hint label="Underline" side="bottom" sideOffset={3}>
+						<Button
+							onClick={toggleUnderline}
+							size="icon"
+							variant="ghost"
+							className={cn(properties.fontUnderline && "bg-gray-100")}
+						>
+							<FaUnderline className="size-4" />
+						</Button>
+					</Hint>
+				</div>
+			)}
+			{isText && (
+				<div className="flex items-center justify-center h-full">
+					<Hint label="Strike" side="bottom" sideOffset={3}>
+						<Button
+							onClick={toggleLinethrough}
+							size="icon"
+							variant="ghost"
+							className={cn(properties.fontLinethrough && "bg-gray-100")}
+						>
+							<FaStrikethrough className="size-4" />
+						</Button>
+					</Hint>
+				</div>
+			)}
+			{isText && (
+				<div className="flex items-center justify-center h-full">
+					<Hint label="Align Left" side="bottom" sideOffset={3}>
+						<Button
+							onClick={() => onChangeTextAlign(TextAlignEnum.Left)}
+							size="icon"
+							variant="ghost"
+							className={cn(
+								properties.textAlign === TextAlignEnum.Left && "bg-gray-100"
+							)}
+						>
+							<AlignLeft className="size-4" />
+						</Button>
+					</Hint>
+				</div>
+			)}
+			{isText && (
+				<div className="flex items-center justify-center h-full">
+					<Hint label="Align Center" side="bottom" sideOffset={3}>
+						<Button
+							onClick={() => onChangeTextAlign(TextAlignEnum.Center)}
+							size="icon"
+							variant="ghost"
+							className={cn(
+								properties.textAlign === TextAlignEnum.Center && "bg-gray-100"
+							)}
+						>
+							<AlignCenter className="size-4" />
+						</Button>
+					</Hint>
+				</div>
+			)}
+			{isText && (
+				<div className="flex items-center justify-center h-full">
+					<Hint label="Align Right" side="bottom" sideOffset={3}>
+						<Button
+							onClick={() => onChangeTextAlign(TextAlignEnum.Right)}
+							size="icon"
+							variant="ghost"
+							className={cn(
+								properties.textAlign === TextAlignEnum.Right && "bg-gray-100"
+							)}
+						>
+							<AlignRight className="size-4" />
 						</Button>
 					</Hint>
 				</div>
