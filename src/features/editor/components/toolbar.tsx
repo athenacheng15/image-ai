@@ -1,6 +1,6 @@
 "use client";
 
-import type { ActiveTool, Editor } from "../type";
+import { FONT_WEIGHT, type ActiveTool, type Editor } from "../type";
 
 import { BsBorderWidth } from "react-icons/bs";
 import { RxTransparencyGrid } from "react-icons/rx";
@@ -10,6 +10,8 @@ import { Hint } from "@/components/hint";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { isTextType } from "../utils";
+import { FaBold } from "react-icons/fa6";
+import { useState } from "react";
 
 interface ToolbarProps {
 	editor: Editor | undefined;
@@ -26,8 +28,21 @@ export const Toolbar = ({
 	const strokeColor = editor?.getActiveStrokeColor();
 	const fontFamily = editor?.getActiveFontFamily();
 
+	const initialFontWeight = editor?.getActiveFontWeight() || FONT_WEIGHT;
+	const [properties, setPropertirs] = useState({
+		fontWeight: initialFontWeight,
+	});
+
 	const selectedObjectType = editor?.selectedObjs[0]?.type;
 	const isText = isTextType(selectedObjectType);
+	const toggleBold = () => {
+		const selectedObject = editor?.selectedObjs[0];
+		if (!selectedObject) return;
+
+		const newValue = properties.fontWeight > 500 ? 500 : 700;
+		editor?.changeFontWeight(newValue);
+		setPropertirs((current) => ({ ...current, fontWeight: newValue }));
+	};
 
 	if (editor?.selectedObjs.length === 0) {
 		return (
@@ -100,6 +115,20 @@ export const Toolbar = ({
 						>
 							<div className="max-w-[100px] truncate">{fontFamily}</div>
 							<ChevronDown className="size-4 ml-2 shrink-0" />
+						</Button>
+					</Hint>
+				</div>
+			)}
+			{isText && (
+				<div className="flex items-center justify-center h-full">
+					<Hint label="Bold" side="bottom" sideOffset={3}>
+						<Button
+							onClick={() => toggleBold()}
+							size="icon"
+							variant="ghost"
+							className={cn(properties.fontWeight > 500 && "bg-gray-100")}
+						>
+							<FaBold className="size-4" />
 						</Button>
 					</Hint>
 				</div>
