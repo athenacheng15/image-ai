@@ -1,14 +1,17 @@
 "use client";
 
 import {
+	FONT_SIZE,
 	FONT_WEIGHT,
 	TextAlignEnum,
 	type ActiveTool,
 	type Editor,
 } from "../type";
 
+import { useState } from "react";
 import { BsBorderWidth } from "react-icons/bs";
 import { RxTransparencyGrid } from "react-icons/rx";
+import { FaBold, FaItalic, FaStrikethrough, FaUnderline } from "react-icons/fa";
 import {
 	AlignCenter,
 	AlignLeft,
@@ -21,10 +24,8 @@ import {
 import { Hint } from "@/components/hint";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { FontSizeInput } from "@/features/editor/components/font-size-input";
 import { isTextType } from "../utils";
-import { FaBold } from "react-icons/fa6";
-import { useState } from "react";
-import { FaItalic, FaStrikethrough, FaUnderline } from "react-icons/fa";
 
 interface ToolbarProps {
 	editor: Editor | undefined;
@@ -45,6 +46,7 @@ export const Toolbar = ({
 	const initialFontLinethrough = editor?.getActiveFontLinethrough();
 	const initialFontUnderline = editor?.getActiveFontUnderline();
 	const initialTextAlign = editor?.getActiveTextAlign();
+	const initialFontSize = editor?.getActiveFontSize() || FONT_SIZE;
 
 	const [properties, setPropertirs] = useState({
 		fillColor: initialFillColor,
@@ -55,6 +57,7 @@ export const Toolbar = ({
 		fontLinethrough: initialFontLinethrough,
 		fontUnderline: initialFontUnderline,
 		textAlign: initialTextAlign,
+		fontSize: initialFontSize,
 	});
 
 	const selectedObject = editor?.selectedObjs[0];
@@ -99,6 +102,13 @@ export const Toolbar = ({
 
 		editor?.changeTextAlign(value);
 		setPropertirs((current) => ({ ...current, textAlign: value }));
+	};
+
+	const onChangeFontSize = (value: number) => {
+		if (!selectedObject) return;
+
+		editor?.changeFontSize(value);
+		setPropertirs((current) => ({ ...current, fontSize: value }));
 	};
 
 	if (editor?.selectedObjs.length === 0) {
@@ -282,7 +292,14 @@ export const Toolbar = ({
 					</Hint>
 				</div>
 			)}
-
+			{isText && (
+				<div className="flex items-center justify-center h-full">
+					<FontSizeInput
+						onChange={onChangeFontSize}
+						value={properties.fontSize}
+					/>
+				</div>
+			)}
 			<div className="flex items-center justify-center h-full">
 				<Hint label="Bring forward" side="bottom" sideOffset={3}>
 					<Button

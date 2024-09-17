@@ -170,6 +170,7 @@ export interface Editor {
 	changeFontUnderline: (value: boolean) => void;
 	changeFontStyle: (value: string) => void;
 	changeTextAlign: (value: string) => void;
+	changeFontSize: (value: number) => void;
 	changeFillColor: (value: string) => void;
 	changeStrokeColor: (value: string) => void;
 	changeStrokeWidth: (value: number) => void;
@@ -187,6 +188,7 @@ export interface Editor {
 	getActiveFontLinethrough: () => boolean;
 	getActiveFontStyle: () => string;
 	getActiveTextAlign: () => string;
+	getActiveFontSize: () => number;
 	getActiveFillColor: () => string;
 	getActiveStrokeColor: () => string;
 	getActiveStrokeWidth: () => number;
