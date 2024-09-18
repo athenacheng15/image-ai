@@ -159,6 +159,7 @@ export interface EditorHookProps {
 }
 
 export interface Editor {
+	addImage: (value: string) => void;
 	delete: () => void;
 	addText: (vallue: string, options?: ITextboxOptions) => void;
 	getActiveOpacity: () => number;

@@ -1,3 +1,6 @@
+import Image from "next/image";
+import Link from "next/link";
+
 import { ToolSidebarHeader } from "@/features/editor/components/tool-sidebar-header";
 import { ToolSidebarClose } from "@/features/editor/components/tool-sidebar-close";
 import { ActiveTool, Editor, fonts } from "@/features/editor/type";
@@ -49,7 +52,34 @@ export const ImageSidebar = ({
 				</div>
 			)}
 			<ScrollArea>
-				<div className="p-4 space-y-2 border-b"></div>
+				<div className="p-4">
+					<div className="grid grid-cols-2 gap-2">
+						{data &&
+							data.map((img) => {
+								return (
+									<button
+										onClick={() => editor?.addImage(img.urls.regular)}
+										key={img.id}
+										className="relative w-full h-[100px] group hover:opacity-75 transition bg-muted rounded-sm overflow-hidden border"
+									>
+										<Image
+											fill
+											src={img.urls.small}
+											alt={img.alt_description || "Image"}
+											className="object-cover"
+										/>
+										<Link
+											href={img.links.html}
+											target="_blank"
+											className="opacity-0 group-hover:opacity-100 absolute left-0 bottom-0 w-full text-[10px] truncate text-white hover:underline p-1 bg-black/50 text-left"
+										>
+											{img.user.name}
+										</Link>
+									</button>
+								);
+							})}
+					</div>
+				</div>
 			</ScrollArea>
 			<ToolSidebarClose onClick={onClose} />
 		</aside>
