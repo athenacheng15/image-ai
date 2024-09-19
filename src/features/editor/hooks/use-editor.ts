@@ -22,6 +22,7 @@ import {
 	TextAlignEnum,
 } from "@/features/editor/type";
 import { isTextType } from "@/features/editor/utils";
+import { creatFilter } from "../colorFilter.util";
 
 const buildEditor = ({
 	canvas,
@@ -56,6 +57,18 @@ const buildEditor = ({
 		canvas.setActiveObject(object);
 	};
 	return {
+		changeImageFilter: (value: string) => {
+			canvas.getActiveObjects().forEach((obj) => {
+				if (obj.type === "image") {
+					const imageObj = obj as fabric.Image;
+					const effect = creatFilter(value);
+
+					imageObj.filters = effect ? [effect] : [];
+					imageObj.applyFilters();
+					canvas.renderAll();
+				}
+			});
+		},
 		addImage: (value: string) => {
 			fabric.Image.fromURL(
 				value,
