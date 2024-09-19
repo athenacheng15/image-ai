@@ -159,9 +159,10 @@ export interface EditorHookProps {
 }
 
 export interface Editor {
+	changeImageFilter: (value: string) => void;
 	addImage: (value: string) => void;
 	delete: () => void;
-	addText: (vallue: string, options?: ITextboxOptions) => void;
+	addText: (value: string, options?: ITextboxOptions) => void;
 	getActiveOpacity: () => number;
 	changeOpacity: (value: number) => void;
 	bringForward: () => void;
@@ -176,7 +177,7 @@ export interface Editor {
 	changeFillColor: (value: string) => void;
 	changeStrokeColor: (value: string) => void;
 	changeStrokeWidth: (value: number) => void;
-	changeStrokeDashArray: (vallue: number[]) => void;
+	changeStrokeDashArray: (value: number[]) => void;
 	addCircle: () => void;
 	addSoftRentangle: () => void;
 	addRectangle: () => void;
