@@ -3,6 +3,7 @@ import Image from "next/image";
 import { ToolSidebarHeader } from "@/features/editor/components/tool-sidebar-header";
 import { ToolSidebarClose } from "@/features/editor/components/tool-sidebar-close";
 import { ActiveTool, Editor } from "@/features/editor/type";
+import { useRemoveBg } from "@/features/ai/api/use-remove-bg";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,8 @@ export const RemoveBgSidebar = ({
 	activeTool,
 	onChangeActiveTool,
 }: RemoveBgSidebarProps) => {
+	const mutation = useRemoveBg();
+
 	const selectedObj = editor?.selectedObjs[0];
 
 	// @ts-ignore
@@ -30,7 +33,10 @@ export const RemoveBgSidebar = ({
 	};
 
 	const onClick = () => {
-		console.log("remove");
+		mutation.mutate(
+			{ image: imageSrc },
+			{ onSuccess: ({ data }) => editor?.addImage(data) }
+		);
 	};
 
 	return (
@@ -58,12 +64,16 @@ export const RemoveBgSidebar = ({
 						<div
 							className={cn(
 								"relative aspect-square rounded-md overflow-hidden transition bg-muted",
-								false && "opacity-50"
+								mutation.isPending && "opacity-50"
 							)}
 						>
 							<Image src={imageSrc} fill alt="Image" className="object-cover" />
 						</div>
-						<Button onClick={onClick} className="w-full">
+						<Button
+							disabled={mutation.isPending}
+							onClick={onClick}
+							className="w-full"
+						>
 							Remove background
 						</Button>
 					</div>
