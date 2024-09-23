@@ -20,26 +20,10 @@ import { ImageSidebar } from "@/features/editor/components/image-sidebar";
 import { FilterSidebar } from "@/features/editor/components/filter-sidebar";
 import { AiSidebar } from "@/features/editor/components/ai-sidebar";
 import { RemoveBgSidebar } from "@/features/editor/components/remove-bg-sidebar";
+import { DrawSidebar } from "@/features/editor/components/draw-sidebar";
 
 export const Editor = () => {
 	const [activeTool, setActiveTool] = useState<ActiveTool>("select");
-
-	const onChangeActiveTool = useCallback(
-		(tool: ActiveTool) => {
-			if (tool === activeTool) {
-				// prevent double click
-				return setActiveTool("select");
-			}
-			if (tool === "draw") {
-				//
-			}
-			if (activeTool === "draw") {
-				//
-			}
-			setActiveTool(tool);
-		},
-		[activeTool]
-	);
 
 	const onClearSelection = useCallback(() => {
 		if (selectionDepedentTools.includes(activeTool)) {
@@ -50,6 +34,23 @@ export const Editor = () => {
 	const { init, editor } = useEditor({
 		clearSelectionCallback: onClearSelection,
 	});
+
+	const onChangeActiveTool = useCallback(
+		(tool: ActiveTool) => {
+			if (tool === "draw") {
+				editor?.enableDrawingMode();
+			}
+			if (activeTool === "draw") {
+				editor?.disableDrawingMode();
+			}
+			setActiveTool(tool);
+			if (tool === activeTool) {
+				// prevent double click
+				return setActiveTool("select");
+			}
+		},
+		[activeTool, editor]
+	);
 
 	const canvasRef = useRef(null);
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -127,6 +128,11 @@ export const Editor = () => {
 					onChangeActiveTool={onChangeActiveTool}
 				/>
 				<RemoveBgSidebar
+					editor={editor}
+					activeTool={activeTool}
+					onChangeActiveTool={onChangeActiveTool}
+				/>
+				<DrawSidebar
 					editor={editor}
 					activeTool={activeTool}
 					onChangeActiveTool={onChangeActiveTool}
