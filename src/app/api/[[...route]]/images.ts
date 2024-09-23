@@ -1,5 +1,4 @@
 import { unsplash } from "@/lib/unsplash";
-import { error } from "console";
 import { Hono } from "hono";
 
 const DEFAULT_COUNT = 50;

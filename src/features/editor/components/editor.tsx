@@ -3,6 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { fabric } from "fabric";
 
+import { ActiveTool, selectionDepedentTools } from "../type";
+import { Toolbar } from "@/features/editor/components/toolbar";
+import { useEditor } from "@/features/editor/hooks/use-editor";
 import { Footer } from "@/features/editor/components/footer";
 import { Navbar } from "@/features/editor/components/navbar";
 import { Sidebar } from "@/features/editor/components/sidebar";
@@ -15,9 +18,7 @@ import { TextSidebar } from "@/features/editor/components/text-sidebar";
 import { FontSidebar } from "@/features/editor/components/font-sidebar";
 import { ImageSidebar } from "@/features/editor/components/image-sidebar";
 import { FilterSidebar } from "@/features/editor/components/filter-sidebar";
-import { Toolbar } from "@/features/editor/components/toolbar";
-import { useEditor } from "@/features/editor/hooks/use-editor";
-import { ActiveTool, selectionDepedentTools } from "../type";
+import { AiSidebar } from "@/features/editor/components/ai-sidebar";
 
 export const Editor = () => {
 	const [activeTool, setActiveTool] = useState<ActiveTool>("select");
@@ -115,6 +116,11 @@ export const Editor = () => {
 					onChangeActiveTool={onChangeActiveTool}
 				/>
 				<FilterSidebar
+					editor={editor}
+					activeTool={activeTool}
+					onChangeActiveTool={onChangeActiveTool}
+				/>
+				<AiSidebar
 					editor={editor}
 					activeTool={activeTool}
 					onChangeActiveTool={onChangeActiveTool}
