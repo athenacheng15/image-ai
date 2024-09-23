@@ -3,6 +3,7 @@ import { fabric } from "fabric";
 
 import { useAutoResize } from "@/features/editor/hooks/use-auto-resize";
 import { useCanvasEvents } from "@/features/editor/hooks/use-canvas-events";
+import { useClipboard } from "@/features/editor/hooks/use-clipboard";
 import {
 	BuildEditorProps,
 	CIRCLE_OPTIONS,
@@ -25,6 +26,8 @@ import { isTextType } from "@/features/editor/utils";
 import { creatFilter } from "../colorFilter.util";
 
 const buildEditor = ({
+	copy,
+	paste,
 	canvas,
 	fontFamily,
 	fillColor,
@@ -57,6 +60,8 @@ const buildEditor = ({
 		canvas.setActiveObject(object);
 	};
 	return {
+		onCopy: () => copy(),
+		onPaste: () => paste(),
 		changeImageFilter: (value: string) => {
 			canvas.getActiveObjects().forEach((obj) => {
 				if (obj.type === "image") {
@@ -434,13 +439,15 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
 	const [strokeDashArray, setStrokeDashArray] =
 		useState<number[]>(STROKE_DASH_ARRAY);
 
+	const { copy, paste } = useClipboard({ canvas });
 	useAutoResize({ canvas, container });
-
 	useCanvasEvents({ canvas, setSelectedObjs, clearSelectionCallback });
 
 	const editor = useMemo(() => {
 		if (canvas) {
 			return buildEditor({
+				copy,
+				paste,
 				canvas,
 				fontFamily,
 				fillColor,
@@ -457,6 +464,8 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
 		}
 		return undefined;
 	}, [
+		copy,
+		paste,
 		canvas,
 		fontFamily,
 		fillColor,
