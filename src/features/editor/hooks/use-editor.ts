@@ -227,6 +227,7 @@ const buildEditor = ({
 				}
 				obj.set({ stroke: value });
 			});
+			canvas.freeDrawingBrush.color = value;
 			canvas.renderAll();
 		},
 		changeStrokeWidth: (value: number) => {
@@ -234,6 +235,7 @@ const buildEditor = ({
 			canvas
 				.getActiveObjects()
 				.forEach((obj) => obj.set({ strokeWidth: value }));
+			canvas.freeDrawingBrush.width = value;
 			canvas.renderAll();
 		},
 		changeStrokeDashArray: (value: number[]) => {
