@@ -26,7 +26,11 @@ import {
 	TRIANGLE_OPTIONS,
 	TextAlignEnum,
 } from "@/features/editor/type";
-import { isTextType } from "@/features/editor/utils";
+import {
+	downlaodFile,
+	isTextType,
+	transformText,
+} from "@/features/editor/utils";
 import { creatFilter } from "../colorFilter.util";
 
 const buildEditor = ({
@@ -51,6 +55,63 @@ const buildEditor = ({
 	setStrokeDashArray,
 	selectedObjs,
 }: BuildEditorProps): Editor => {
+	const generateSaveOptions = () => {
+		const { width, height, left, top } = getWorkspace() as fabric.Rect;
+		return {
+			name: "Image",
+			format: "png",
+			quality: 1,
+			width,
+			height,
+			left,
+			top,
+		};
+	};
+
+	const savePng = () => {
+		const options = generateSaveOptions();
+
+		canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+		const dataUrl = canvas.toDataURL(options);
+
+		downlaodFile(dataUrl, "png");
+		autoZoom();
+	};
+
+	const saveSvg = () => {
+		const options = generateSaveOptions();
+
+		canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+		const dataUrl = canvas.toDataURL(options);
+
+		downlaodFile(dataUrl, "svg");
+		autoZoom();
+	};
+
+	const saveJpg = () => {
+		const options = generateSaveOptions();
+
+		canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+		const dataUrl = canvas.toDataURL(options);
+
+		downlaodFile(dataUrl, "jpg");
+		autoZoom();
+	};
+
+	const saveJson = async () => {
+		const dataUrl = canvas.toJSON(JSON_KEYS);
+		await transformText(dataUrl.objects);
+		const fileString = `data:text/json;charset=utf-8,${encodeURIComponent(
+			JSON.stringify(dataUrl, null, "\t")
+		)}`;
+		downlaodFile(fileString, "json");
+	};
+
+	const loadJson = (json: string) => {
+		const data = JSON.parse(json);
+		canvas.loadFromJSON(data, autoZoom);
+	};
+
 	const getWorkspace = () => {
 		return canvas.getObjects().find((obj) => obj.name === "clip");
 	};
@@ -70,6 +131,11 @@ const buildEditor = ({
 		canvas.setActiveObject(object);
 	};
 	return {
+		savePng,
+		saveJpg,
+		saveSvg,
+		saveJson,
+		loadJson,
 		canUndo,
 		canRedo,
 		autoZoom,
