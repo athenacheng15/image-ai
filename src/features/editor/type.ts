@@ -162,6 +162,7 @@ export interface EditorHookProps {
 }
 
 export interface Editor {
+	getWorkspace: () => fabric.Object | undefined;
 	changeSize: (value: { width: number; height: number }) => void;
 	changeBackground: (value: string) => void;
 	enableDrawingMode: () => void;

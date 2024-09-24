@@ -61,6 +61,7 @@ const buildEditor = ({
 		canvas.setActiveObject(object);
 	};
 	return {
+		getWorkspace,
 		changeSize: (value: { width: number; height: number }) => {
 			const workSpace = getWorkspace();
 
