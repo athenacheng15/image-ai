@@ -61,7 +61,26 @@ const buildEditor = ({
 		canvas.setActiveObject(object);
 	};
 	return {
+		autoZoom,
 		getWorkspace,
+		zoomIn: () => {
+			let zommRatio = canvas.getZoom();
+			zommRatio += 0.05;
+			const center = canvas.getCenter();
+			canvas.zoomToPoint(
+				new fabric.Point(center.left, center.top),
+				zommRatio > 1 ? 1 : zommRatio
+			);
+		},
+		zoomOut: () => {
+			let zommRatio = canvas.getZoom();
+			zommRatio -= 0.05;
+			const center = canvas.getCenter();
+			canvas.zoomToPoint(
+				new fabric.Point(center.left, center.top),
+				zommRatio < 0.2 ? 0.2 : zommRatio
+			);
+		},
 		changeSize: (value: { width: number; height: number }) => {
 			const workSpace = getWorkspace();
 
