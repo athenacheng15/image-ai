@@ -10,38 +10,46 @@ interface FooterProps {
 }
 
 export const Footer = ({ editor }: FooterProps) => {
+	const controls = [
+		{
+			label: "Reset",
+			action: () => editor?.autoZoom(),
+			Icon: Minimize,
+		},
+		{
+			label: "Zoom in",
+			action: () => editor?.zoomIn(),
+			Icon: ZoomIn,
+		},
+		{
+			label: "Zoom out",
+			action: () => editor?.zoomOut(),
+			Icon: ZoomOut,
+		},
+	];
+
 	return (
 		<footer className="h-[52px] border-t bg-white w-full flex items-center overflow-x-auto z-[49] p-2 gap-x-1 shrink-0 px4 flex-row-reverse">
-			<Hint label="Reset" side="top" sideOffset={10}>
-				<Button
-					onClick={() => editor?.autoZoom()}
-					size="icon"
-					variant="ghost"
-					className="h-full"
-				>
-					<Minimize className="size-4" />
-				</Button>
-			</Hint>
-			<Hint label="Zoom in" side="top" sideOffset={10}>
-				<Button
-					onClick={() => editor?.zoomIn()}
-					size="icon"
-					variant="ghost"
-					className="h-full"
-				>
-					<ZoomIn className="size-4" />
-				</Button>
-			</Hint>
-			<Hint label="Zoom out" side="top" sideOffset={10}>
-				<Button
-					onClick={() => editor?.zoomOut()}
-					size="icon"
-					variant="ghost"
-					className="h-full"
-				>
-					<ZoomOut className="size-4" />
-				</Button>
-			</Hint>
+			{controls.map((control) => {
+				const Icon = control.Icon;
+				return (
+					<Hint
+						key={control.label}
+						label={control.label}
+						side="top"
+						sideOffset={10}
+					>
+						<Button
+							onClick={control.action}
+							size="icon"
+							variant="ghost"
+							className="h-full"
+						>
+							<Icon className="size-4" />
+						</Button>
+					</Hint>
+				);
+			})}
 		</footer>
 	);
 };
