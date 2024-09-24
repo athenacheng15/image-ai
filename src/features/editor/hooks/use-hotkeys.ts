@@ -33,29 +33,36 @@ export const useHotkeys = ({
 			canvas?.discardActiveObject();
 		}
 
-		if (isCtrlKey && e.key === "z") {
+		if (isCtrlKey) {
 			e.preventDefault();
-			redo();
-		}
-		if (isCtrlKey && e.key === "c") {
-			e.preventDefault();
-			copy();
-		}
-		if (isCtrlKey && e.key === "v") {
-			e.preventDefault();
-			paste();
-		}
-		if (isCtrlKey && e.key === "s") {
-			e.preventDefault();
-			save(true);
-		}
 
-		if (isCtrlKey && e.key === "a") {
-			e.preventDefault();
-			canvas?.discardActiveObject();
-			const allObjs = canvas?.getObjects().filter((obj) => obj.selectable);
-			canvas?.setActiveObject(new fabric.ActiveSelection(allObjs, { canvas }));
-			canvas?.renderAll();
+			switch (e.key.toLowerCase()) {
+				case "z":
+					undo();
+					break;
+				case "y":
+					redo();
+					break;
+				case "c":
+					copy();
+					break;
+				case "v":
+					paste();
+					break;
+				case "s":
+					save(true);
+					break;
+				case "a":
+					canvas?.discardActiveObject();
+					const allObjs = canvas?.getObjects().filter((obj) => obj.selectable);
+					canvas?.setActiveObject(
+						new fabric.ActiveSelection(allObjs, { canvas })
+					);
+					canvas?.renderAll();
+					break;
+				default:
+					break;
+			}
 		}
 	});
 };
