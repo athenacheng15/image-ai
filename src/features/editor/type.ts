@@ -178,6 +178,10 @@ export interface EditorHookProps {
 }
 
 export interface Editor {
+	canUndo: () => boolean;
+	canRedo: () => boolean;
+	onUndo: () => void;
+	onRedo: () => void;
 	autoZoom: () => void;
 	getWorkspace: () => fabric.Object | undefined;
 	zoomIn: () => void;
