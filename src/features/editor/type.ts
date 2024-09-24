@@ -2,6 +2,17 @@ import { fabric } from "fabric";
 import { ITextboxOptions } from "fabric/fabric-impl";
 import * as material from "material-colors";
 
+export const JSON_KEYS = [
+	"name",
+	"gradientAngle",
+	"selectable",
+	"hasControls",
+	"linkData",
+	"editable",
+	"extensionType",
+	"extension",
+];
+
 export const fonts = [
 	"Arial",
 	"Arial Black",
@@ -141,6 +152,11 @@ export enum TextAlignEnum {
 }
 
 export type BuildEditorProps = {
+	save: (skip?: boolean) => void;
+	canRedo: () => boolean;
+	canUndo: () => boolean;
+	undo: () => void;
+	redo: () => void;
 	autoZoom: () => void;
 	copy: () => void;
 	paste: () => void;
@@ -162,6 +178,10 @@ export interface EditorHookProps {
 }
 
 export interface Editor {
+	canUndo: () => boolean;
+	canRedo: () => boolean;
+	onUndo: () => void;
+	onRedo: () => void;
 	autoZoom: () => void;
 	getWorkspace: () => fabric.Object | undefined;
 	zoomIn: () => void;
