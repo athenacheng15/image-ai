@@ -141,6 +141,7 @@ export enum TextAlignEnum {
 }
 
 export type BuildEditorProps = {
+	autoZoom: () => void;
 	copy: () => void;
 	paste: () => void;
 	canvas: fabric.Canvas;
@@ -161,6 +162,8 @@ export interface EditorHookProps {
 }
 
 export interface Editor {
+	changeSize: (value: { width: number; height: number }) => void;
+	changeBackground: (value: string) => void;
 	enableDrawingMode: () => void;
 	disableDrawingMode: () => void;
 	onCopy: () => void;
