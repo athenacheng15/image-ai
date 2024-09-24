@@ -4,6 +4,8 @@ import { fabric } from "fabric";
 import { useAutoResize } from "@/features/editor/hooks/use-auto-resize";
 import { useCanvasEvents } from "@/features/editor/hooks/use-canvas-events";
 import { useClipboard } from "@/features/editor/hooks/use-clipboard";
+import { useHistory } from "@/features/editor/hooks/use-history";
+
 import {
 	BuildEditorProps,
 	CIRCLE_OPTIONS,
@@ -26,6 +28,11 @@ import { isTextType } from "@/features/editor/utils";
 import { creatFilter } from "../colorFilter.util";
 
 const buildEditor = ({
+	save,
+	canRedo,
+	canUndo,
+	undo,
+	redo,
 	autoZoom,
 	copy,
 	paste,
@@ -485,13 +492,19 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
 	const [strokeDashArray, setStrokeDashArray] =
 		useState<number[]>(STROKE_DASH_ARRAY);
 
+	const { save, canRedo, canUndo, undo, redo } = useHistory({ canvas });
 	const { copy, paste } = useClipboard({ canvas });
 	const { autoZoom } = useAutoResize({ canvas, container });
-	useCanvasEvents({ canvas, setSelectedObjs, clearSelectionCallback });
+	useCanvasEvents({ canvas, setSelectedObjs, clearSelectionCallback, save });
 
 	const editor = useMemo(() => {
 		if (canvas) {
 			return buildEditor({
+				save,
+				canRedo,
+				canUndo,
+				undo,
+				redo,
 				autoZoom,
 				copy,
 				paste,
@@ -511,10 +524,15 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
 		}
 		return undefined;
 	}, [
+		canvas,
+		save,
+		canRedo,
+		canUndo,
+		undo,
+		redo,
 		autoZoom,
 		copy,
 		paste,
-		canvas,
 		fontFamily,
 		fillColor,
 		strokeColor,
