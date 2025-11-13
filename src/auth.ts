@@ -9,5 +9,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 	providers: [GitHub],
 	pages: {
 		signIn: "/sign-in",
+		error: "/sign-in",
 	},
 });
