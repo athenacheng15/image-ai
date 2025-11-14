@@ -2,6 +2,9 @@
 
 import Link from "next/link";
 import { signIn } from "next-auth/react";
+import { useState } from "react";
+import { FaGithub } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 
 import {
 	Card,
@@ -11,10 +14,18 @@ import {
 	CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FaGithub } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 
 export const SignUpCard = () => {
+	const [name, setName] = useState("");
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+
+	const onCredentialsSignUp = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+	};
+
 	const onProviderSignUp = (provider: "github" | "google") => {
 		signIn(provider, { callbackUrl: "/" });
 	};
@@ -28,6 +39,35 @@ export const SignUpCard = () => {
 			</CardHeader>
 
 			<CardContent className="space-y-5 px-0 pb-0">
+				<form onSubmit={onCredentialsSignUp} className="space-y-2.5">
+					<Input
+						required
+						type="text"
+						placeholder="Name"
+						value={name}
+						onChange={(e) => setName(e.target.value)}
+					/>
+					<Input
+						required
+						type="email"
+						placeholder="Email"
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
+					/>
+					<Input
+						required
+						type="password"
+						placeholder="Password"
+						value={password}
+						onChange={(e) => setPassword(e.target.value)}
+						minLength={3}
+						maxLength={20}
+					/>
+					<Button type="submit" className="w-full" size="lg">
+						Continue
+					</Button>
+				</form>
+				<Separator />
 				<div className="flex flex-col gap-y-2.5">
 					<Button
 						onClick={() => onProviderSignUp("github")}
