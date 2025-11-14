@@ -5,6 +5,7 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { TriangleAlert } from "lucide-react";
 
 import { useSignUp } from "@/features/auth/hooks/use-sign-up";
 
@@ -53,6 +54,13 @@ export const SignUpCard = () => {
 					Use your email or other services to create an account
 				</CardDescription>
 			</CardHeader>
+
+			{!!mutation.error && (
+				<div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mb-6">
+					<TriangleAlert className="size-4" />
+					<p>Invalid Email or Password</p>
+				</div>
+			)}
 
 			<CardContent className="space-y-5 px-0 pb-0">
 				<form onSubmit={onCredentialsSignUp} className="space-y-2.5">

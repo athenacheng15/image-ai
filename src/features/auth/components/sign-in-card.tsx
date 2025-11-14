@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
@@ -16,10 +17,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { TriangleAlert } from "lucide-react";
 
 export const SignInCard = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+
+	const params = useSearchParams();
+	const error = params.get("error");
 
 	const onCredentialsSignIn = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -37,6 +42,13 @@ export const SignInCard = () => {
 					Use your email or other services to log in
 				</CardDescription>
 			</CardHeader>
+
+			{!!error && (
+				<div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mb-6">
+					<TriangleAlert className="size-4" />
+					<p>Invalid Email or Password</p>
+				</div>
+			)}
 
 			<CardContent className="space-y-5 px-0 pb-0">
 				<form onSubmit={onCredentialsSignIn} className="space-y-2.5">
