@@ -1,12 +1,21 @@
 import type { JWT } from "next-auth/jwt";
 
 import NextAuth from "next-auth";
+import bcrypt from "bcryptjs";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
+import { z } from "zod";
+import { eq } from "drizzle-orm";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 
 import { db } from "@/db/drizzle";
+import { users } from "@/db/schema";
+
+const credentialsSchema = z.object({
+	email: z.string().email(),
+	password: z.string(), // do not validate password length here, it might forbid previous users after changing the password rules
+});
 
 declare module "next-auth/jwt" {
 	interface JWT {
@@ -23,8 +32,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 				password: { label: "Password", type: "password" },
 			},
 			async authorize(credentials) {
-				console.log(credentials);
-				return null;
+				const validatedFields = credentialsSchema.safeParse(credentials);
+				if (!validatedFields.success) {
+					return null;
+				}
+				const { email, password } = validatedFields.data;
+				const [user] = await db
+					.select()
+					.from(users)
+					.where(eq(users.email, email));
+				if (!user || !user.password) {
+					return null;
+				}
+
+				const passwordsMatch = await bcrypt.compare(password, user.password);
+				if (!passwordsMatch) {
+					return null;
+				}
+
+				return user;
 			},
 		}),
 		GitHub,

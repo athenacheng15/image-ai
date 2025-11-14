@@ -6,6 +6,8 @@ import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
+import { useSignUp } from "@/features/auth/hooks/use-sign-up";
+
 import {
 	Card,
 	CardContent,
@@ -18,12 +20,26 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 
 export const SignUpCard = () => {
+	const mutation = useSignUp();
+
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
 	const onCredentialsSignUp = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		mutation.mutate(
+			{ name, email, password },
+			{
+				onSuccess: () => {
+					signIn("credentials", {
+						email,
+						password,
+						callbackUrl: "/",
+					});
+				},
+			}
+		);
 	};
 
 	const onProviderSignUp = (provider: "github" | "google") => {
@@ -42,6 +58,7 @@ export const SignUpCard = () => {
 				<form onSubmit={onCredentialsSignUp} className="space-y-2.5">
 					<Input
 						required
+						disabled={mutation.isPending}
 						type="text"
 						placeholder="Name"
 						value={name}
@@ -49,6 +66,7 @@ export const SignUpCard = () => {
 					/>
 					<Input
 						required
+						disabled={mutation.isPending}
 						type="email"
 						placeholder="Email"
 						value={email}
@@ -56,6 +74,7 @@ export const SignUpCard = () => {
 					/>
 					<Input
 						required
+						disabled={mutation.isPending}
 						type="password"
 						placeholder="Password"
 						value={password}
@@ -63,13 +82,19 @@ export const SignUpCard = () => {
 						minLength={3}
 						maxLength={20}
 					/>
-					<Button type="submit" className="w-full" size="lg">
+					<Button
+						type="submit"
+						className="w-full"
+						size="lg"
+						disabled={mutation.isPending}
+					>
 						Continue
 					</Button>
 				</form>
 				<Separator />
 				<div className="flex flex-col gap-y-2.5">
 					<Button
+						disabled={mutation.isPending}
 						onClick={() => onProviderSignUp("github")}
 						variant="outline"
 						size="lg"
@@ -79,6 +104,7 @@ export const SignUpCard = () => {
 						Continue with GitHub
 					</Button>
 					<Button
+						disabled={mutation.isPending}
 						onClick={() => onProviderSignUp("google")}
 						variant="outline"
 						size="lg"
