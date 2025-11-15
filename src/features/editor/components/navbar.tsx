@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 import { Logo } from "@/features/editor/components/logo";
+import { UserButton } from "@/features/auth/components/user-button";
 import {
 	DropdownMenu,
 	DropdownMenuItem,
@@ -170,6 +171,7 @@ export const Navbar = ({
 							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
+					<UserButton />
 				</div>
 			</div>
 		</nav>
