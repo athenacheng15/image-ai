@@ -7,15 +7,16 @@ import { initAuthConfig } from "@hono/auth-js";
 import images from "./images";
 import ai from "./ai";
 import users from "./users";
+import projects from "./projects";
 
 import authConfig from "@/auth.config";
 
 // Revert to "edge" if planning on running on the edge
 export const runtime = "nodejs";
 
-function getAuthConfig(c: Context): AuthConfig {
+function getAuthConfig(): AuthConfig {
 	return {
-		secret: c.env.AUTH_SECRET,
+		secret: process.env.AUTH_SECRET,
 		...authConfig,
 	};
 }
@@ -27,7 +28,8 @@ app.use("*", initAuthConfig(getAuthConfig));
 const routes = app
 	.route("/ai", ai)
 	.route("/images", images)
-	.route("/users", users);
+	.route("/users", users)
+	.route("/projects", projects);
 
 export const GET = handle(app);
 export const POST = handle(app);
