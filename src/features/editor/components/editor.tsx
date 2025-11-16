@@ -23,7 +23,13 @@ import { RemoveBgSidebar } from "@/features/editor/components/remove-bg-sidebar"
 import { DrawSidebar } from "@/features/editor/components/draw-sidebar";
 import { SettingsSidebar } from "@/features/editor/components/settings-sidebar";
 
-export const Editor = () => {
+import { ResponseType } from "@/features/projects/api/use-get-project";
+
+interface EditorProps {
+	initialData: ResponseType["data"];
+}
+
+export const Editor = ({ initialData }: EditorProps) => {
 	const [activeTool, setActiveTool] = useState<ActiveTool>("select");
 
 	const onClearSelection = useCallback(() => {
