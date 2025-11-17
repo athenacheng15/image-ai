@@ -49,6 +49,9 @@ export const Editor = ({ initialData }: EditorProps) => {
 	}, [activeTool]);
 
 	const { init, editor } = useEditor({
+		defaultState: initialData.json,
+		defaultHeight: initialData.height,
+		defaultWidth: initialData.width,
 		clearSelectionCallback: onClearSelection,
 		saveCallback: debounceSaved,
 	});
@@ -90,6 +93,7 @@ export const Editor = ({ initialData }: EditorProps) => {
 	return (
 		<div className="h-full flex flex-col">
 			<Navbar
+				id={initialData.id}
 				editor={editor}
 				activeTool={activeTool}
 				onChangeActiveTool={onChangeActiveTool}

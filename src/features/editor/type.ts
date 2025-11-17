@@ -174,6 +174,9 @@ export type BuildEditorProps = {
 	setStrokeWidth: (value: number) => void;
 };
 export interface EditorHookProps {
+	defaultState?: string;
+	defaultHeight?: number;
+	defaultWidth?: number;
 	clearSelectionCallback?: () => void;
 	saveCallback: (values: {
 		json: string;
