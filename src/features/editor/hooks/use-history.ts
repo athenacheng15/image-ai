@@ -4,9 +4,14 @@ import { JSON_KEYS } from "../type";
 
 interface UseHostoryProps {
 	canvas: fabric.Canvas | null;
+	saveCallback?: (values: {
+		json: string;
+		height: number;
+		width: number;
+	}) => void;
 }
 
-export const useHistory = ({ canvas }: UseHostoryProps) => {
+export const useHistory = ({ canvas, saveCallback }: UseHostoryProps) => {
 	const [historyIndex, setHistoryIndex] = useState(0);
 	const canvasHistory = useRef<string[]>([]);
 	const skipSave = useRef(false);
@@ -30,8 +35,12 @@ export const useHistory = ({ canvas }: UseHostoryProps) => {
 				canvasHistory.current.push(json);
 				setHistoryIndex(canvasHistory.current.length - 1);
 			}
+			const workSpace = canvas.getObjects().find((obj) => obj.name === "clip");
+			const height = workSpace?.height || 0;
+			const width = workSpace?.width || 0;
+			saveCallback?.({ json, height, width });
 		},
-		[canvas]
+		[canvas, saveCallback]
 	);
 
 	const undo = useCallback(() => {

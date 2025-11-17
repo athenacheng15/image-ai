@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { fabric } from "fabric";
+import debounce from "lodash.debounce";
 
 import { ActiveTool, selectionDepedentTools } from "../type";
 import { Toolbar } from "@/features/editor/components/toolbar";
@@ -24,12 +25,23 @@ import { DrawSidebar } from "@/features/editor/components/draw-sidebar";
 import { SettingsSidebar } from "@/features/editor/components/settings-sidebar";
 
 import { ResponseType } from "@/features/projects/api/use-get-project";
+import { useUpdateProject } from "@/features/projects/api/use-update-project";
 
 interface EditorProps {
 	initialData: ResponseType["data"];
 }
 
 export const Editor = ({ initialData }: EditorProps) => {
+	const { mutate } = useUpdateProject(initialData.id);
+
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	const debounceSaved = useCallback(
+		debounce((values: { json: string; height: number; width: number }) => {
+			mutate(values);
+		}, 500),
+		[mutate]
+	);
+
 	const [activeTool, setActiveTool] = useState<ActiveTool>("select");
 
 	const onClearSelection = useCallback(() => {
@@ -39,7 +51,11 @@ export const Editor = ({ initialData }: EditorProps) => {
 	}, [activeTool]);
 
 	const { init, editor } = useEditor({
+		defaultState: initialData.json,
+		defaultHeight: initialData.height,
+		defaultWidth: initialData.width,
 		clearSelectionCallback: onClearSelection,
+		saveCallback: debounceSaved,
 	});
 
 	const onChangeActiveTool = useCallback(
@@ -79,6 +95,7 @@ export const Editor = ({ initialData }: EditorProps) => {
 	return (
 		<div className="h-full flex flex-col">
 			<Navbar
+				id={initialData.id}
 				editor={editor}
 				activeTool={activeTool}
 				onChangeActiveTool={onChangeActiveTool}
