@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { fabric } from "fabric";
+import debounce from "lodash.debounce";
 
 import { ActiveTool, selectionDepedentTools } from "../type";
 import { Toolbar } from "@/features/editor/components/toolbar";
@@ -33,10 +34,11 @@ interface EditorProps {
 export const Editor = ({ initialData }: EditorProps) => {
 	const { mutate } = useUpdateProject(initialData.id);
 
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const debounceSaved = useCallback(
-		(values: { json: string; height: number; width: number }) => {
+		debounce((values: { json: string; height: number; width: number }) => {
 			mutate(values);
-		},
+		}, 500),
 		[mutate]
 	);
 
