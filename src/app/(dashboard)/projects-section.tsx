@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 import { useGetProjects } from "@/features/projects/api/use-get-projects";
+import { useDuplicateProject } from "@/features/projects/api/use-duplicate-project";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import {
 	DropdownMenu,
@@ -23,9 +24,16 @@ import {
 
 import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export const ProjectsSection = () => {
 	const router = useRouter();
+	const duplicateProject = useDuplicateProject();
+
+	const onCopy = (id: string) => {
+		duplicateProject.mutate({ id });
+	};
+
 	const { data, status, isFetchingNextPage, hasNextPage, fetchNextPage } =
 		useGetProjects();
 
@@ -99,8 +107,8 @@ export const ProjectsSection = () => {
 											</DropdownMenuTrigger>
 											<DropdownMenuContent align="end" className="min-w-60">
 												<DropdownMenuItem
-													disabled={false}
-													onClick={() => {}}
+													disabled={duplicateProject.isPending}
+													onClick={() => onCopy(project.id)}
 													className="h-10 cursor-pointer"
 												>
 													<Copy className="size-4 mr-2" />
