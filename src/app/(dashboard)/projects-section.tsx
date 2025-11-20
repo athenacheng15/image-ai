@@ -11,8 +11,12 @@ import {
 	Search,
 	Trash,
 } from "lucide-react";
+import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 
 import { useGetProjects } from "@/features/projects/api/use-get-projects";
+import { useDuplicateProject } from "@/features/projects/api/use-duplicate-project";
+import { useDeleteProject } from "@/features/projects/api/use-delete-project";
+
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import {
 	DropdownMenu,
@@ -20,12 +24,28 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 import { Button } from "@/components/ui/button";
+import { useConfirm } from "@/hooks/use-confirm";
 
 export const ProjectsSection = () => {
+	const [ConfirmDialog, confirm] = useConfirm(
+		"Delete Project",
+		"Are you sure you want to delete this project?"
+	);
 	const router = useRouter();
+	const duplicateProject = useDuplicateProject();
+	const deleteProject = useDeleteProject();
+
+	const onDelete = async (id: string) => {
+		const ok = await confirm();
+		if (ok) {
+			deleteProject.mutate({ id });
+		}
+	};
+	const onCopy = (id: string) => {
+		duplicateProject.mutate({ id });
+	};
+
 	const { data, status, isFetchingNextPage, hasNextPage, fetchNextPage } =
 		useGetProjects();
 
@@ -68,6 +88,7 @@ export const ProjectsSection = () => {
 
 	return (
 		<div className="space-y-4">
+			<ConfirmDialog />
 			<h3 className="text-lg font-semibold">Recent Projects</h3>
 			<Table>
 				<TableBody>
@@ -99,16 +120,16 @@ export const ProjectsSection = () => {
 											</DropdownMenuTrigger>
 											<DropdownMenuContent align="end" className="min-w-60">
 												<DropdownMenuItem
-													disabled={false}
-													onClick={() => {}}
+													disabled={duplicateProject.isPending}
+													onClick={() => onCopy(project.id)}
 													className="h-10 cursor-pointer"
 												>
 													<Copy className="size-4 mr-2" />
 													Make a copy
 												</DropdownMenuItem>
 												<DropdownMenuItem
-													disabled={false}
-													onClick={() => {}}
+													disabled={deleteProject.isPending}
+													onClick={() => onDelete(project.id)}
 													className="h-10 cursor-pointer"
 												>
 													<Trash className="size-4 mr-2" />
