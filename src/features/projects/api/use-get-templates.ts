@@ -1,10 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { client } from "@/lib/hono";
-import { InferRequestType } from "hono";
+import { InferRequestType, InferResponseType } from "hono";
 
 type RequestType = InferRequestType<
 	typeof client.api.projects.templates.$get
 >["query"];
+
+export type ResponseType = InferResponseType<
+	typeof client.api.projects.templates.$get,
+	200
+>;
 
 export const useGetTemplates = (apiQuery: RequestType) => {
 	const query = useQuery({

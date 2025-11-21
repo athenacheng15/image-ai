@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 interface TemplateCardProps {
 	imageSrc: string;
 	title: string;
-	onClick: (title: string) => void;
+	onClick: () => void;
 	disabled?: boolean;
 	description: string;
 	width: number;
@@ -26,7 +26,7 @@ export const TemplateCard = ({
 }: TemplateCardProps) => {
 	return (
 		<button
-			onClick={() => {}}
+			onClick={onClick}
 			disabled={disabled}
 			className={cn(
 				"space-y-2 group text-left transition flex flex-col",

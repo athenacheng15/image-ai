@@ -1,14 +1,40 @@
 "use client";
 
-import { useGetTemplates } from "@/features/projects/api/use-get-templates";
 import { AlertTriangle, Loader } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+import {
+	useGetTemplates,
+	ResponseType,
+} from "@/features/projects/api/use-get-templates";
+import { useCreateProject } from "@/features/projects/api/use-create-project";
+
 import { TemplateCard } from "./template-card";
 
 export const TemplatesSection = () => {
+	const router = useRouter();
+	const createProject = useCreateProject();
+
 	const { data, status, isLoading, isError } = useGetTemplates({
 		page: "1",
 		limit: "4",
 	});
+
+	const onClick = (template: ResponseType["data"][0]) => {
+		createProject.mutate(
+			{
+				name: `${template.name} Project`,
+				json: template.json,
+				height: template.height,
+				width: template.width,
+			},
+			{
+				onSuccess: ({ data }) => {
+					router.push(`/editor/${data.id}`);
+				},
+			}
+		);
+	};
 
 	if (isLoading) {
 		return (
@@ -48,8 +74,8 @@ export const TemplatesSection = () => {
 						key={template.id}
 						title={template.name}
 						imageSrc={template.thumbnailUrl || ""}
-						onClick={() => {}}
-						disabled={false}
+						onClick={() => onClick(template)}
+						disabled={createProject.isPending}
 						description={`${template.width}x${template.height}px`}
 						width={template.width}
 						height={template.height}
