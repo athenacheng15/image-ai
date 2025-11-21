@@ -52,7 +52,7 @@ export const ProjectsSection = () => {
 	if (status === "pending") {
 		return (
 			<div className="space-y-4">
-				<h3>Recent Projects</h3>
+				<h3 className="text-lg font-semibold">Recent Projects</h3>
 				<div className="flex flex-col gap-y-4 items-center justify-center h-32">
 					<Loader className="size-6 animate-spin text-muted-foreground" />
 				</div>
@@ -63,7 +63,7 @@ export const ProjectsSection = () => {
 	if (status === "error") {
 		return (
 			<div className="space-y-4">
-				<h3>Recent Projects</h3>
+				<h3 className="text-lg font-semibold">Recent Projects</h3>
 				<div className="flex flex-col gap-y-4 items-center justify-center h-32">
 					<AlertTriangle className="size-6 text-muted-foreground" />
 					<p className="text-sm text-muted-foreground">
@@ -74,10 +74,10 @@ export const ProjectsSection = () => {
 		);
 	}
 
-	if (!data.pages.length) {
+	if (!data.pages.length || !data.pages[0].data.length) {
 		return (
 			<div className="space-y-4">
-				<h3>Recent Projects</h3>
+				<h3 className="text-lg font-semibold">Recent Projects</h3>
 				<div className="flex flex-col gap-y-4 items-center justify-center h-32">
 					<Search className="size-6 text-muted-foreground" />
 					<p className="text-sm text-muted-foreground">No projects found</p>
