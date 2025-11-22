@@ -29,7 +29,7 @@ export const SubscriptionModal = () => {
 		<Dialog open={isOpen} onOpenChange={onClose}>
 			<DialogContent>
 				<DialogHeader className="space-y-4 flex items-center">
-					<Image src="/logo.png" alt="Logo" width={36} height={36} />
+					<Image src="/logo.svg" alt="Logo" width={36} height={36} />
 					<DialogTitle className="text-center">Upgrade to Pro</DialogTitle>
 					<DialogDescription>
 						Upgrade to Pro to get access to all features and templates.

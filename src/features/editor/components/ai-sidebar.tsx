@@ -1,6 +1,7 @@
 import { ToolSidebarHeader } from "@/features/editor/components/tool-sidebar-header";
 import { ToolSidebarClose } from "@/features/editor/components/tool-sidebar-close";
 import { ActiveTool, Editor } from "@/features/editor/type";
+import { usePaywall } from "@/features/subscriptions/hooks/use-paywall";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
@@ -21,13 +22,16 @@ export const AiSidebar = ({
 	onChangeActiveTool,
 }: AiSidebarProps) => {
 	const mutation = useGenerateImage();
-
+	const { shouldBlock, triggerPaywall } = usePaywall();
 	const [value, setValue] = useState("");
 
 	const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		//TODO: Block with paywall
+		if (shouldBlock) {
+			triggerPaywall();
+			return;
+		}
 
 		mutation.mutate(
 			{ prompt: value },
